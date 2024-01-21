@@ -1,47 +1,48 @@
-import { useState } from "react";
+import { useRef } from "react";
+import styles from "./AppName.module.css";
+import { MdAddBox } from "react-icons/md";
+import TodoItem from "./TodoItem";
+import { useContext } from "react";
+import { TodoItemsContext } from "../store/todo-items-store";
 
 function AddTodo({ onNewItem }) {
-  const [todoName, setTodoName] = useState("");
-  const [dueDate, setDueDate] = useState("");
 
-  const handleNameChange = (event) => {
-    setTodoName(event.target.value);
-  };
+  const newTodoElement = useRef();
+  const newDateElement = useRef();
+  const {addNewItem} = useContext(TodoItemsContext);
 
-  const handleDateChange = (event) => {
-    setDueDate(event.target.value);
-  };
-
-  const handleAddButtonClicked = () => {
-    onNewItem(todoName, dueDate);
-    setDueDate("");
-    setTodoName("");
+  const handleAddButtonClicked = (event) => {
+    event.preventDefault(); // Prevent the default form submission behavior
+    const todoName = newTodoElement.current.value;
+    const dueDate  = newDateElement.current.value;
+    addNewItem(todoName, dueDate);
+    newTodoElement.current.value = "";
+    newDateElement.current.value = "";
   };
 
   return (
-    <div className="container text-center">
-      <div className="row kg-row">
+    <div className={`container text-center`}>
+      <form className="row kg-row" onSubmit={handleAddButtonClicked}>
+
         <div className="col-6">
           <input
             type="text"
             placeholder="Enter Todo Here"
-            value={todoName}
-            onChange={handleNameChange}
+            ref={newTodoElement}
           />
         </div>
         <div className="col-4">
-          <input type="date" value={dueDate} onChange={handleDateChange} />
+          <input type="date" ref={newDateElement} />
         </div>
-        <div className="col-2">
+        <div className={`${styles.BtnCenter} col-2`}>
           <button
-            type="button"
+            type="submit"
             className="btn btn-success kg-button"
-            onClick={handleAddButtonClicked}
           >
-            Add
+            Add <MdAddBox />
           </button>
         </div>
-      </div>
+      </form>
     </div>
   );
 }

@@ -4,3 +4,8 @@
   margin: 10px;
   margin-bottom: 20px;
 }
+.BtnCenter{
+  display: flex;
+  justify-content: center;
+}
+
